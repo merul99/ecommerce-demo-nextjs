@@ -25,7 +25,7 @@ const Home = async () => {
           <h2 className="text-xl font-bold text-center text-gray-800" >Products</h2>
         </div>
         <hr />
-        <div className="p-8 mt-6 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 xl:gap-y-8">
+        <div className="p-8 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 xl:gap-y-8">
           {products.map((product, index) => (
             <div key={product.id} className=" p-3 group relative border-solid border-2 border-gray-200 rounded-md shadow-md">
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75 lg:h-80">

@@ -47,8 +47,7 @@ export const options = ({
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                const customUser = user;
-                return { ...token, id: customUser.id, name: customUser.name };
+                return { ...token, id: user.id, name: user.name };
             }
             return token;
         }, async session({ session, user, token }) {
@@ -57,6 +56,7 @@ export const options = ({
                 user: {
                     ...session.user,
                     name: token.name,
+                    id: token.id
                 }
             }
         },

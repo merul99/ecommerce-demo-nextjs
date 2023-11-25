@@ -55,7 +55,7 @@ function Navbar() {
 
                     {status !== 'authenticated' ?
                         <li>
-                            <Link href='/signIn'>
+                            <Link href='/signin'>
                                 Sign In
                             </Link>
                         </li> :
@@ -63,7 +63,7 @@ function Navbar() {
                             <span onClick={() => {
                                 signOut({ redirect: false }).then(() => {
                                     toast.warn("Logged out successfully.")
-                                    router.push("/signIn");
+                                    router.push("/signin");
                                 });
                             }}>
                                 Sign out
