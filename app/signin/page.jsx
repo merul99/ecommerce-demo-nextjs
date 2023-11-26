@@ -13,7 +13,6 @@ const SignIn = () => {
         signIn('credentials', { ...data, redirect: false, callbackUrl: `${window.location.origin}` })
             .then((res) => {
                 if (res?.error) {
-                    console.log('res', res)
                     toast.error(res.error)
                 }
                 if (res?.ok && !res?.error) {

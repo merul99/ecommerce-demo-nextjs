@@ -1,38 +1,37 @@
 'use client'
-import { Axios } from '@/Helpers/AxiosHelper'
 import React, { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectProducts } from '@/ReduxStore/Slices/productSlice'
+import { getProducts, getUserCart } from '@/Helpers/ApiHelper'
+import { addProduct, reduceProduct, selectCart } from '@/ReduxStore/Slices/cartSlice'
+import { FaPlus, FaMinus } from "react-icons/fa6";
+
 
 const Cart = () => {
     const { data, status } = useSession()
     const userId = data?.user?.id;
+    const dispatch = useDispatch()
 
-    const [cartData, setCartData] = useState([]);
-    const [allProducts, setAllProducts] = useState([]);
     const [productsWithDetails, setProductsWithDetails] = useState([]);
     const [totalAmount, setTotalAmount] = useState(0);
 
+    //Fetch product and cart data from redux store
+    const products = useSelector(selectProducts)
+    const cartData = useSelector(selectCart)
+
     useEffect(() => {
-        const getCartData = async (id) => {
-            try {
-                const response = await Axios.get(`https://fakestoreapi.com/carts/${id}`)
-                setCartData(response.data)
-                const productResponse = await Axios.get(`https://fakestoreapi.com/products`)
-                setAllProducts(productResponse.data)
-            } catch (error) {
-                setCartData([])
-            }
-        }
+        dispatch(getProducts())
         if (userId) {
-            getCartData(userId)
+            dispatch(getUserCart(userId))
         }
     }, [userId])
 
     useEffect(() => {
         // Update productsWithDetails and totalAmount
         const updatedProducts = cartData?.products?.map(cartProduct => {
-            const productDetails = allProducts?.find(product => product?.id === cartProduct?.productId);
+            const productDetails = products?.find(product => product?.id === cartProduct?.productId);
 
             if (productDetails) {
                 return {
@@ -51,7 +50,15 @@ const Cart = () => {
         }, 0);
 
         setTotalAmount(updatedTotalAmount);
-    }, [cartData, allProducts,]);
+    }, [cartData, products,]);
+
+    const handleAddProduct = (productId, quantity) => {
+        dispatch(addProduct({ productId, quantity }));
+    };
+
+    const handleReduceProduct = (productId, quantity) => {
+        dispatch(reduceProduct({ productId, quantity }));
+    };
 
     const removeHandler = (productId) => {
         const updatedCart = productsWithDetails?.filter(prod => prod?.id !== productId);
@@ -74,21 +81,6 @@ const Cart = () => {
                 </div>
                 <hr />
                 <div className="p-5">
-                    {/* <div className="flex h-full flex-col bg-white shadow-xl w-3/5"> */}
-                    {/* <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6"> */}
-                    {/* <div className="flex items-start justify-between">
-                                <h2 className="text-lg font-medium text-gray-900" id="slide-over-title">Shopping cart</h2>
-                                <div className="ml-3 flex h-7 items-center">
-                                    <button type="button" className="relative -m-2 p-2 text-gray-400 hover:text-gray-500">
-                                        <span className="absolute -inset-0.5"></span>
-                                        <span className="sr-only">Close panel</span>
-                                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div> */}
-
                     {productsWithDetails && <div className="mt-8 mb-6">
                         <div className="flow-root">
                             <ul role="list" className="-my-6 divide-y divide-gray-200">
@@ -109,20 +101,29 @@ const Cart = () => {
                                                 <p className="mt-1 text-sm text-gray-500">{product?.category}</p>
                                             </div>
                                             <div className="flex flex-1 items-end justify-between text-sm">
-                                                <p className="text-gray-500">Qty {product?.quantity}</p>
+                                                <p className="text-gray-500">Qty {product?.quantity}
+                                                </p>
+                                                <div className='flex cursor-pointer'>
+                                                    <div class="inline-flex">
+                                                        <button class="bg-white-300 border border-gray-400 hover:bg-indigo-400 text-gray-800 font-bold py-1 px-2 rounded-l" onClick={() => { handleAddProduct(product?.id, 1) }}>
+                                                            <FaPlus size={17} />
+                                                        </button>
+                                                        <button class="bg-white-300 border border-gray-400 hover:bg-indigo-400 text-gray-800 font-bold py-1 px-2 rounded-r" onClick={() => { handleReduceProduct(product?.id, -1) }}>
+                                                            <FaMinus size={17} />
+                                                        </button>
+                                                    </div>
+                                                </div>
 
                                                 <div className="flex">
                                                     <button type="button" className="font-medium text-indigo-600 hover:text-indigo-500" onClick={() => removeHandler(product.id)}>Remove</button>
                                                 </div>
                                             </div>
                                         </div>
-                                        {/* <hr /> */}
                                     </li>)
                                 })}
                             </ul>
                         </div>
                     </div>}
-                    {/* </div> */}
 
                     <div className="border-t border-gray-200 px-4 py-6 sm:px-6 pb-0">
                         <div className="flex justify-between text-base font-medium text-gray-900">
