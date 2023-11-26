@@ -72,7 +72,7 @@ const Cart = () => {
 
         setTotalAmount(updatedTotalAmount);
     };
-
+    console.log("productsWithDetails", productsWithDetails);
     return (
         <div className="bg-white flex justify-center mt-5">
             <div className="border-solid border-2 border-gray-200 rounded-md w-2/5">
@@ -108,7 +108,13 @@ const Cart = () => {
                                                         <button class="bg-white-300 border border-gray-400 hover:bg-indigo-400 text-gray-800 font-bold py-1 px-2 rounded-l" onClick={() => { handleAddProduct(product?.id, 1) }}>
                                                             <FaPlus size={17} />
                                                         </button>
-                                                        <button class="bg-white-300 border border-gray-400 hover:bg-indigo-400 text-gray-800 font-bold py-1 px-2 rounded-r" onClick={() => { handleReduceProduct(product?.id, -1) }}>
+                                                        <button class="bg-white-300 border border-gray-400 hover:bg-indigo-400 text-gray-800 font-bold py-1 px-2 rounded-r" onClick={() => {
+                                                            if (product?.quantity === 1) {
+                                                                removeHandler(product.id)
+                                                            } else {
+                                                                handleReduceProduct(product?.id, 1)
+                                                            }
+                                                        }}>
                                                             <FaMinus size={17} />
                                                         </button>
                                                     </div>
