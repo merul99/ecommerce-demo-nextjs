@@ -5,12 +5,14 @@ import { useEffect, useState } from "react";
 import { CiStar } from "react-icons/ci";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import { useRouter } from "next/navigation";
-
-
+import { useDispatch } from "react-redux";
+import { addProduct } from "@/ReduxStore/Slices/cartSlice";
+import { toast } from "react-toastify";
 
 const Product = ({ params }) => {
     const router = useRouter()
     const [product, setProduct] = useState({});
+    const dispatch = useDispatch()
 
     useEffect(() => {
         const getProduct = async (productId) => {
@@ -37,24 +39,11 @@ const Product = ({ params }) => {
         return modifiedArray.join(" ")
     }
 
-    // const handleShow = (product: any) => {
-    //     setActiveProduct(product)
-    //     setIsModalOpen(true);
-    // }
-    // const handleClose = () => setIsModalOpen(false)
-
-    // const deleteHandler = async (productId: any) => {
-    //     // await ApiHelper.deleteProduct(productId, token?.id)
-    //     router.push('/')
-    // };
-
-    // const addToCartHandler = async ({ quantity }: any) => {
-    //     const data = { userId, productId, quantity: +quantity }
-    //     const response = await addProductToCart(data)
-    //     toast.success(response.data.message)
-    //     reset()
-    // };
-
+    const addToCartHandler = async (productId, quantity = 1) => {
+        console.log('productId', productId, quantity)
+        dispatch(addProduct({ productId, quantity }))
+        toast.success("Product is added in the Cart.")
+    };
 
     return (
         <div className="bg-white flex justify-center mt-5">
@@ -63,7 +52,10 @@ const Product = ({ params }) => {
                     <h2 className="text-xl font-bold text-center text-gray-800" >{product.title}</h2>
                 </div>
                 <hr />
-                <div className="px-3 py-3 cursor-pointer"><MdOutlineKeyboardBackspace size={28} onClick={() => router.push("/")} /></div>
+                <div className="px-3 py-3 cursor-pointer flex">
+                    <MdOutlineKeyboardBackspace size={28} onClick={() => router.push("/")} />
+                    {/* {"> Products"} */}
+                </div>
                 <div className="aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden sm:rounded-lg mt-3">
                     <Image className='h-full w-full object-cover object-center lg:h-full lg:w-full' width={200} height={200} style={{ objectFit: 'scale-down', height: '300px' }} src={product?.image} alt={`Card img cap${product?.image}`} />
                 </div>
@@ -95,9 +87,9 @@ const Product = ({ params }) => {
                         </div>
                         <button
                             type="submit"
-                            className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" onClick={() => addToCartHandler(product.id)}
                         >
-                            Add to bag
+                            Add To Cart
                         </button>
 
                     </div>

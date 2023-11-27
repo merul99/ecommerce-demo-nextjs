@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     isLoading: false,
-    cart: {},
+    cart: { products: [] },
     errorMessage: ""
 }
 
@@ -13,37 +13,33 @@ export const cartSlice = createSlice({
     reducers: {
         addProduct: (state, action) => {
             const { productId, quantity } = action.payload;
-            const existingProduct = state.cart.products.find(product => product.productId === productId);
+            const existingProduct = state?.cart?.products?.find(product => product.productId === productId);
 
             if (existingProduct) {
                 existingProduct.quantity += quantity;
             } else {
-                state.cart.products.push({ productId, quantity });
+                state?.cart?.products?.push({ productId, quantity });
             }
         },
         reduceProduct: (state, action) => {
             const { productId, quantity } = action.payload;
-            const existingProduct = state.cart.products.find(product => product.productId === productId);
+            const existingProduct = state?.cart?.products?.find(product => product.productId === productId);
+            const existingProductIndex = state?.cart?.products?.findIndex(product => product.productId === productId)
 
-            if (existingProduct) {
-                existingProduct.quantity = Math.max(existingProduct.quantity - quantity, 0);
+            if (quantity) {
+                if (existingProduct) {
+                    if (existingProduct.quantity > 1) {
+                        existingProduct.quantity = existingProduct.quantity - quantity
+                    } else {
+                        state?.cart?.products?.splice(existingProductIndex, 1)
+                    }
+                }
+            } else {
+                state?.cart?.products?.splice(existingProductIndex, 1)
             }
+
         },
     },
-    extraReducers: (builder) => {
-        builder
-            .addCase(getUserCart.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(getUserCart.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.cart = action.payload;
-            })
-            .addCase(getUserCart.rejected, (state, action) => {
-                state.isLoading = false;
-                state.errorMessage = action.payload
-            })
-    }
 })
 export const { addProduct, reduceProduct } = cartSlice.actions;
 

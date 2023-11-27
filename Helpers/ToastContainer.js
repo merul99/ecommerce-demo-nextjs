@@ -6,7 +6,8 @@ import 'react-toastify/dist/ReactToastify.css';
 const ToastProvider = ({ children }) => {
     return (
         <>
-            <ToastContainer />
+            <ToastContainer
+                className="toast-position" />
             {children}
         </>
     )
