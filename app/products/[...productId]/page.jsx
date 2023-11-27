@@ -50,7 +50,6 @@ const Product = ({ params }) => {
     }
 
     const addToCartHandler = async (productId, quantity = 1) => {
-        console.log('productId', productId, quantity)
         dispatch(addProduct({ productId, quantity }))
         toast.success("Product is added in the Cart.")
     };
@@ -59,7 +58,7 @@ const Product = ({ params }) => {
         <div className="bg-white flex justify-center mt-5">
             <div className="border-solid border-2 border-gray-200 rounded-md w-3/5">
                 <div className="mx-auto max-w-2xl px-5 py-3 lg:max-w-7xl">
-                    <h2 className="text-xl font-bold text-center text-gray-800" >{product.title ? product?.title : "Product Info"}</h2>
+                    <h2 className="text-lg font-bold text-center text-gray-800" >{product.title ? product?.title : "Product Info"}</h2>
                 </div>
                 <hr />
                 {!isLoading ?
@@ -69,7 +68,14 @@ const Product = ({ params }) => {
                             {/* {"> Products"} */}
                         </div>
                         <div className="aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden sm:rounded-lg mt-3">
-                            <Image className='h-full w-full object-cover object-center lg:h-full lg:w-full' width={200} height={200} style={{ objectFit: 'scale-down', height: '300px' }} src={product?.image} alt={`Card img cap${product?.image}`} />
+                            <Image
+                                className='h-full w-full object-cover object-center lg:h-full lg:w-full'
+                                width={200}
+                                height={200}
+                                style={{ objectFit: 'scale-down', height: '300px' }}
+                                src={product?.image}
+                                alt={`Card img cap${product?.image}`}
+                            />
                         </div>
 
                         <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">

@@ -24,6 +24,17 @@
   cursor: pointer;
 }
 
+.navbar-menu-item {
+  padding: 10px 15px;
+  text-align: center;
+  display: flex;
+  color: #34495e;
+  font-size: 0.99em;
+  text-decoration: none;
+  cursor: default;
+}
+
+
 .main-nav span:hover,
 .logo a:hover,
 .main-nav a:hover {

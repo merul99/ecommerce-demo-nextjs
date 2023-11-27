@@ -37,9 +37,13 @@ export const cartSlice = createSlice({
                 state.cart.products.splice(existingProductIndex, 1);
             }
         },
+        emptyCart: (state, action) => {
+            state = initialState
+            return state
+        }
     },
 })
-export const { addProduct, reduceProduct } = cartSlice.actions;
+export const { addProduct, reduceProduct, emptyCart } = cartSlice.actions;
 
 export const selectIsLoading = (state) => state.cart.isLoading
 export const selectCart = (state) => state.cart.cart

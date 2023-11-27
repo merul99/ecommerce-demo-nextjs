@@ -25,15 +25,22 @@ const Home = async () => {
           <h2 className="text-2xl font-bold text-gray-800" >Products</h2>
         </div>
         {/* <hr /> */}
-        <div className="p-5 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 xl:gap-y-8">
+        <div className="p-5 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-5 xl:gap-x-8 xl:gap-y-8">
           {products.map((product, index) => (
             <div key={product.id} className=" p-3 group relative border-solid border-2 border-gray-200 rounded-md shadow-md">
-              <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75 lg:h-80">
-                <Image className='h-full w-full object-cover object-center lg:h-full lg:w-full' width={200} height={200} style={{ objectFit: 'scale-down', height: '300px' }} src={product.image} alt={`Card img cap${index}`} />
+              <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75 ">
+                <Image
+                  className='h-full w-full object-cover object-center lg:h-full lg:w-full'
+                  width={100}
+                  height={100}
+                  style={{ objectFit: 'scale-down', height: '200px' }}
+                  src={product?.image ?? 'fallback-image-url'}
+                  alt={`Card img cap${index}`}
+                />
               </div>
-              <div className="mt-4 flex justify-between">
-                <div>
-                  <h3 className="text-sm text-gray-700">
+              <div className="mt-4 flex justify-between gap-2">
+                <div className="flex-1">
+                  <h3 className="text-sm text-gray-700 overflow-hidden overflow-ellipsis line-clamp-2">
                     <Link href={`/products/${product.id}`}>
                       <span aria-hidden="true" className="absolute inset-0" />
                       {product.title}
@@ -41,7 +48,7 @@ const Home = async () => {
                   </h3>
                   <p className="mt-1 text-sm text-gray-900">{product.rating?.rate}</p>
                 </div>
-                <p className="text-sm font-medium text-gray-900">${product.price}</p>
+                <p className="text-sm font-medium text-gray-900 overflow-hidden">${product.price}</p>
               </div>
             </div>
           ))}

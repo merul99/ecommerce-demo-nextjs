@@ -9,17 +9,21 @@ import { addProduct, reduceProduct, selectCart } from '@/ReduxStore/Slices/cartS
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import Link from 'next/link'
 import Loader from '@/Components/Loader'
+import { useRouter } from 'next/navigation'
+import { toast } from 'react-toastify'
 
 
 const Cart = () => {
     const { data, status } = useSession()
     const userId = data?.user?.id;
     const dispatch = useDispatch()
+    const router = useRouter()
 
     const [productsWithDetails, setProductsWithDetails] = useState([]);
     const [totalAmount, setTotalAmount] = useState(0);
 
-    const [isLoading, setIsloading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     //Fetch product and cart data from redux store
     const products = useSelector(selectProducts)
@@ -58,11 +62,24 @@ const Cart = () => {
 
     const handleAddProduct = (productId, quantity) => {
         dispatch(addProduct({ productId, quantity }));
+        toast.success("Product quantity updated successfully.")
     };
 
     const handleReduceProduct = (productId, quantity) => {
         dispatch(reduceProduct({ productId, quantity }));
+        if (quantity) {
+            toast.success("Product quantity updated successfully.")
+        } else {
+            toast.success("Product has been removed successfully.")
+        }
     };
+
+    const checkoutHandler = () => {
+        setIsSubmitting(true)
+        setTimeout(() => {
+            router.push('/successOrder');
+        }, 1500);
+    }
 
     return (
         <div className="bg-white flex justify-center mt-5">
@@ -77,10 +94,17 @@ const Cart = () => {
                             <div className="flow-root">
                                 <ul role="list" className="-my-6 divide-y divide-gray-200">
                                     {productsWithDetails.map((product, index) => {
-                                        return (<li className="flex py-6">
+                                        return (<li className="flex py-6" key={index}>
                                             <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                                 <Link href={`/products/${product?.id}`}>
-                                                    <Image className='h-full w-full object-cover object-center lg:h-full lg:w-full py-3' width={90} height={90} style={{ objectFit: 'scale-down' }} src={product?.image} alt={`Card img cap${index}`} />
+                                                    <Image
+                                                        className='h-full w-full object-cover object-center lg:h-full lg:w-full py-3'
+                                                        width={90}
+                                                        height={90}
+                                                        style={{ objectFit: 'scale-down' }}
+                                                        src={product?.image}
+                                                        alt={`Card img cap${index}`}
+                                                    />
                                                 </Link>
                                             </div>
 
@@ -100,11 +124,7 @@ const Cart = () => {
                                                     <div className='flex cursor-pointer'>
                                                         <div class="inline-flex">
                                                             <button class="bg-white-300 border border-gray-400 hover:bg-indigo-400 text-gray-800 font-bold py-1 px-2 rounded-l" onClick={() => {
-                                                                // if (product?.quantity === 1) {
-                                                                //     removeHandler(product.id)
-                                                                // } else {
                                                                 handleReduceProduct(product?.id, 1)
-                                                                // }
                                                             }}>
                                                                 <FaMinus size={17} />
                                                             </button>
@@ -131,9 +151,10 @@ const Cart = () => {
                                 <p className='text-xl'>Subtotal</p>
                                 <p className='text-xl'>${totalAmount.toFixed(2)}</p>
                             </div>
-                            {/* <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p> */}
                             <div className="mt-6">
-                                <a href="#" className=" flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</a>
+                                <button type='button' className={`w-full rounded-md py-3 px-6 font-medium text-white ${isSubmitting ? 'bg-indigo-400' : 'bg-indigo-600  hover:bg-indigo-700 cursor-pointer'}`} onClick={() => { checkoutHandler() }}
+                                    disabled={isSubmitting}
+                                > {isSubmitting ? 'Loading...' : 'Checkout'} </button>
                             </div>
                             <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                                 <Link href='/'>

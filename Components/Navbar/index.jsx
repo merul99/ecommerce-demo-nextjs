@@ -13,7 +13,6 @@ function Navbar() {
     const activeUser = data?.user;
 
     const cartState = useSelector(selectCart)
-    console.log('cartStat', cartState)
 
     const capitalizeName = (str) => {
         if (!str) {
@@ -33,14 +32,12 @@ function Navbar() {
                 </h2>
                 <ul className='main-nav'>
                     {activeUser && <li>
-                        <Link href='/'>
-                            Welcome, <b>{capitalizeName(activeUser?.name)}</b>
-                        </Link>
+                        <p className='navbar-menu-item'>Welcome, &nbsp;<b>{capitalizeName(activeUser?.name)}</b></p>
                     </li>}
                     {status === 'authenticated' && <li>
                         <Link href='/cart'>
                             Cart
-                            <span
+                            {cartState?.products?.length > 0 && <span
                                 className="ml-1"
                                 style={{
                                     backgroundColor: "#5d63ea",
@@ -50,7 +47,7 @@ function Navbar() {
                                 }}
                             >
                                 {cartState?.products?.length}
-                            </span>
+                            </span>}
                         </Link>
                     </li>}
 
