@@ -34,3 +34,10 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+//Additional Notes.
+    - We have use Redux just to store the cart data so we can do manipulation with the product quantity or the whole product.
+    - If there will be API in the project then we can ommit the use of the Redux.
+    - Also to get the redux state, we use redux hook (useSelector). Hence we have to make those componenet as client component. We can switch those component to the server component and implement complex functionality on the server.
+    -For the Signin page, while form submission, we can implement the NextJS functionality (server action) to submit the form and make that component as the server component too.
+    -Also, I have use Next-auth library to implement authentication logic using Credentials provider. With that library, We can get the user session data at any component to implement authentication based functionality.

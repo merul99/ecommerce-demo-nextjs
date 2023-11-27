@@ -20,7 +20,7 @@ export const options = ({
                     throw new Error('Please enter an username and password')
                 }
 
-                const user = { id: '1', name: "Merul", email: 'mmp@narola.email' }
+                const user = { id: '1', name: username, email: `${username}@test.email` }
 
                 // const user = await User.findOne({ userName: username })
 

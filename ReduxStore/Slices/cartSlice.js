@@ -1,4 +1,3 @@
-import { getUserCart } from '@/Helpers/ApiHelper';
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
@@ -23,21 +22,20 @@ export const cartSlice = createSlice({
         },
         reduceProduct: (state, action) => {
             const { productId, quantity } = action.payload;
-            const existingProduct = state?.cart?.products?.find(product => product.productId === productId);
+            // const existingProduct = state?.cart?.products?.find(product => product.productId === productId);
             const existingProductIndex = state?.cart?.products?.findIndex(product => product.productId === productId)
 
-            if (quantity) {
-                if (existingProduct) {
-                    if (existingProduct.quantity > 1) {
-                        existingProduct.quantity = existingProduct.quantity - quantity
-                    } else {
-                        state?.cart?.products?.splice(existingProductIndex, 1)
-                    }
+            if (quantity && existingProductIndex !== -1) {
+                const existingProduct = state.cart.products[existingProductIndex];
+
+                if (existingProduct.quantity > 1) {
+                    existingProduct.quantity -= quantity;
+                } else {
+                    state.cart.products.splice(existingProductIndex, 1);
                 }
             } else {
-                state?.cart?.products?.splice(existingProductIndex, 1)
+                state.cart.products.splice(existingProductIndex, 1);
             }
-
         },
     },
 })

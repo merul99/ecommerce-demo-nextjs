@@ -1,7 +1,9 @@
 'use client'
+import { selectCart } from '@/ReduxStore/Slices/cartSlice';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
 
@@ -10,6 +12,8 @@ function Navbar() {
     const { data, status } = useSession()
     const activeUser = data?.user;
 
+    const cartState = useSelector(selectCart)
+    console.log('cartStat', cartState)
 
     const capitalizeName = (str) => {
         if (!str) {
@@ -33,25 +37,28 @@ function Navbar() {
                             Welcome, <b>{capitalizeName(activeUser?.name)}</b>
                         </Link>
                     </li>}
-                    <li>
+                    {status === 'authenticated' && <li>
                         <Link href='/cart'>
                             Cart
+                            <span
+                                className="ml-1"
+                                style={{
+                                    backgroundColor: "#5d63ea",
+                                    borderRadius: "50px",
+                                    padding: "0.00rem 0.50rem",
+                                    color: "white",
+                                }}
+                            >
+                                {cartState?.products?.length}
+                            </span>
                         </Link>
-                    </li>
+                    </li>}
 
                     <li>
                         <Link href='/'>
                             Products
                         </Link>
                     </li>
-
-                    {activeUser?.role && ['admin'].includes(activeUser.role) &&
-                        <li >
-                            <Link href='/create'>
-                                Create
-                            </Link>
-                        </li>
-                    }
 
                     {status !== 'authenticated' ?
                         <li>
@@ -62,7 +69,7 @@ function Navbar() {
                         <li>
                             <span onClick={() => {
                                 signOut({ redirect: false }).then(() => {
-                                    toast.warn("Logged out successfully.")
+                                    toast.success("Logged out successfully.")
                                     router.push("/signin");
                                 });
                             }}>
